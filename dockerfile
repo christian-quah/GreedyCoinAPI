@@ -1,21 +1,16 @@
-# Use an OpenJDK base image
+# Use OpenJDK as the base image
 FROM openjdk:17-jdk-slim
 
-# Set the working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy the Maven project into the container
-COPY . /app
+# Copy the project files into the container
+COPY target/GreedyCoinAPI-0.0.1-SNAPSHOT.jar ./app.jar
+COPY config.yml ./config.yml
 
-# Install Maven in the container
-RUN apt-get update && apt-get install -y maven
-
-# Compile the application
-RUN mvn clean compile
-
-# Expose the application's port
+# Expose the port your application listens on
 EXPOSE 8080
 
-# Command to run the application
-CMD ["mvn", "exec:java", "-Dexec.mainClass=com.christianquah.greedycoinapi.GreedyCoinAPIApplication"]
+# Define the command to run the application
+CMD ["java", "-jar", "app.jar", "server", "config.yml"]
 
